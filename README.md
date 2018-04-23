@@ -10,7 +10,7 @@ A simple html DOM parser implemented via pure Lua
 
 ## Selectors
 
-Supported selectors are a subset of [jQuery's selectors][https://api.jquery.com/category/selectors/]:
+Supported selectors are a subset of [jQuery's selectors](https://api.jquery.com/category/selectors/)
 
 
 - `"element"` elements with the given tagname
