@@ -83,7 +83,7 @@ local node = {
 		self:value(tbl)
 		return table.concat(tbl)
 	end,
-	selecto = function(self, cond, out)
+	match = function(self, cond)
 		local match = true
 		local class = cond.class
 		if class then
@@ -104,17 +104,11 @@ local node = {
 		if match and name and self.name ~= name then
 			match = false
 		end
-		if match then
-			out[#out + 1] = self
-		end
-		for _, v in pairs(self.child) do
-			if type(v) == "table" then
-				v:selecto(cond, out)
-			end
-		end
+		return match
 	end,
 	select = function(self, method)
 		local out = {}
+		local childs = {}
 		local cond = {
 			name = nil,
 			id = nil,
@@ -131,7 +125,30 @@ local node = {
 				cond.name = k
 			end
 		end
-		self:selecto(cond, out)
+		local type, pairs = type, pairs
+		local nodes = {self}
+		local n = #nodes
+		::MATCH::
+		local j = 0
+		for i = 1, n do
+			local node = nodes[i]
+			for _, v in pairs(node.child) do
+				if type(v) == "table" then
+					if v:match(cond) then
+						out[#out + 1] = v
+					else
+						j = j + 1
+						childs[j] = v
+					end
+				end
+			end
+		end
+		if #out == 0 and j > 0 then
+			n = j
+			nodes = childs
+			childs = {}
+			goto MATCH
+		end
 		return out
 	end,
 }
