@@ -151,6 +151,13 @@ local node = {
 		end
 		return out
 	end,
+	selectn = function(self, method, level)
+		local item = self
+		for i = 1, level - 1 do
+			item = item:select(method)[1]
+		end
+		return item:select(method)
+	end
 }
 
 local nodemt = {__index = node}
